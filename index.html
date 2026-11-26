@@ -83,6 +83,33 @@ button{font-size:clamp(11.5px,.95vw,12.5px);letter-spacing:.14em}
 @media(min-width:1100px){.lede{max-width:40ch;white-space:normal}}
 @media(max-width:520px){h1{font-size:30px;letter-spacing:.11em;padding-left:.11em}.motto{font-size:21px;margin-top:16px}.lede{font-size:16px;margin-top:12px;max-width:30ch}form{margin-top:28px}.roadmap{margin-top:32px;font-size:14px;max-width:28ch}}
 @media(prefers-reduced-motion:reduce){.roadmap{animation:none;opacity:1}}
+
+/* split layout: identity on the left, what's next + the one action on the right */
+.main{align-items:center;text-align:left}
+.main .wrap.split{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.9fr);gap:clamp(40px,6vw,104px);align-items:center;flex-direction:initial;padding-block:clamp(32px,6vh,80px)}
+.intro h1{font-size:clamp(46px,6.6vw,104px);line-height:.98;letter-spacing:.08em;padding-left:0;text-wrap:initial}
+.intro h1 span{display:block}
+.intro .motto{font-size:clamp(24px,2.3vw,34px);margin-top:clamp(20px,2.4vw,32px)}
+.intro .lede{text-align:left;max-width:34ch;margin-top:16px;font-size:clamp(16.5px,1.3vw,19px)}
+.card{position:relative;padding:clamp(28px,3vw,44px);border:1px solid rgba(237,234,227,.16);background:linear-gradient(180deg,rgba(22,24,30,.62),rgba(13,13,15,.55));backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 40px 80px -40px rgba(0,0,0,.8);opacity:0;animation:in 1.4s .9s ease forwards}
+.card::before{content:"";position:absolute;left:-1px;top:-1px;width:56px;height:2px;background:var(--mist)}
+.kicker{margin:0;font-size:12px;font-weight:700;letter-spacing:.26em;text-transform:uppercase;color:var(--mist)}
+.road{margin:16px 0 0;font-family:"EB Garamond",Georgia,serif;font-style:italic;font-size:clamp(21px,1.75vw,26px);line-height:1.35;color:var(--cream);text-wrap:balance}
+.card form{margin-top:28px;max-width:none;flex-direction:column;border:0;background:none;backdrop-filter:none;gap:10px;opacity:1;animation:none}
+.card input{border:1px solid rgba(237,234,227,.35);background:rgba(13,13,15,.5);min-height:52px;padding:0 16px}
+.card input:focus{border-color:var(--mist);outline:none}
+.card button{min-height:52px;width:100%;font-size:12.5px;letter-spacing:.16em}
+.card .msg{margin:10px 0 0;min-height:0}
+.roadmap{display:none}
+@media(max-width:900px){
+ .main .wrap.split{grid-template-columns:minmax(0,1fr);gap:36px;padding-block:28px 40px}
+ .intro h1{font-size:clamp(40px,11vw,64px);letter-spacing:.07em}
+ .intro .motto{font-size:22px;margin-top:16px}
+ .intro .lede{font-size:16px;max-width:32ch}
+ .card{padding:24px}
+ .road{font-size:20px}
+}
+@media(prefers-reduced-motion:reduce){.card{animation:none;opacity:1}}
 </style>
 </head>
 <body>
@@ -93,17 +120,22 @@ button{font-size:clamp(11.5px,.95vw,12.5px);letter-spacing:.14em}
  <header class="top"><div class="wrap">
   <span class="logo"><svg viewBox="30 20 590 700" aria-hidden="true"><path d="M125 205 L605 30 L578 158 L550 182 L250 293 L236 396 L540 284 L322 494 L205 546 L165 632 L42 712 Z" fill="#EDEAE3"/></svg>Forth</span>
  </div></header>
- <main class="main"><div class="wrap">
-  <h1>Forth Ventures</h1>
-  <p class="motto">Building a more human future.</p>
-  <p class="lede">A venture studio building products that help people live better, with the creators they trust.</p>
-  <form id="f" novalidate>
-   <label for="e" class="vh">Email</label>
-   <input id="e" type="email" placeholder="Your email" autocomplete="email" required>
-   <button type="submit">Notify me at launch</button>
-  </form>
-  <p class="msg" id="m" role="status"></p>
-  <p class="roadmap"><span class="rule" aria-hidden="true"></span>Starting with everyday products, building toward infrastructure for human potential.</p>
+ <main class="main"><div class="wrap split">
+  <section class="intro">
+   <h1><span>Forth</span> <span>Ventures</span></h1>
+   <p class="motto">Building a more human future.</p>
+   <p class="lede">A venture studio building products that help people live better, with the creators they trust.</p>
+  </section>
+  <aside class="card" aria-label="Launch updates">
+   <p class="kicker">Coming soon</p>
+   <p class="road">Starting with everyday products, building toward infrastructure for human potential.</p>
+   <form id="f" novalidate>
+    <label for="e" class="vh">Email</label>
+    <input id="e" type="email" placeholder="Your email" autocomplete="email" required>
+    <button type="submit">Notify me at launch</button>
+   </form>
+   <p class="msg" id="m" role="status"></p>
+  </aside>
  </div></main>
  <footer class="bottom"><div class="wrap"><span>Made in Vancouver</span><span>© 2026 Forth Ventures™</span></div></footer>
 </div>
