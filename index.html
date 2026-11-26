@@ -142,12 +142,21 @@ form{margin-top:48px;max-width:440px;width:100%}
 .roadmap{margin-top:64px;max-width:440px;font-size:13px;line-height:1.7;letter-spacing:.03em}
 @media(max-width:520px){.kick{font-size:10.5px;letter-spacing:.28em;margin-bottom:22px}h1{font-size:27px;letter-spacing:.16em;padding-left:.16em}.motto{font-size:21px;margin-top:18px}.lede{margin-top:12px;max-width:31ch}form{margin-top:36px}.roadmap{margin-top:52px;max-width:30ch}}
 @media(prefers-reduced-motion:reduce){.kick{animation:none;opacity:1}}
+
+/* the mark: scattered points gather into the Forth F, then rest as a quiet watermark */
+.mark{position:absolute;inset:0;z-index:2;width:100%;height:100%;pointer-events:none}
+.top,.main,.bottom{z-index:3}
+.kick{animation-delay:2.5s}
+h1{animation-delay:2.6s}
+.motto{animation-delay:3.2s}.lede{animation-delay:3.4s}form{animation-delay:3.6s}.roadmap{animation-delay:3.9s}
+.roadmap .rule{animation-delay:4.2s}
 </style>
 </head>
 <body>
 <div class="stage">
  <div class="footage" id="footage" aria-hidden="true"><div class="fallback"></div></div>
  <canvas class="sky" id="sky" aria-hidden="true"></canvas>
+ <canvas class="mark" id="mark" aria-hidden="true"></canvas>
  <div class="shade" aria-hidden="true"></div>
  <div class="horizon" aria-hidden="true"></div>
  <div class="spot" id="spot" aria-hidden="true"></div>
@@ -220,6 +229,37 @@ document.getElementById('f').addEventListener('submit',function(e){e.preventDefa
  addEventListener('pointermove',function(e){mx=e.clientX/innerWidth;my=e.clientY/innerHeight;if(!raf)raf=requestAnimationFrame(function(){raf=0;
   sky.style.transform='translate3d('+((mx-.5)*-14).toFixed(1)+'px,'+((my-.5)*-10).toFixed(1)+'px,0)';
   spot.style.setProperty('--mx',(mx*100).toFixed(1)+'%');spot.style.setProperty('--my',(my*100).toFixed(1)+'%')})});
+})();
+
+/* Forth mark in light: points gather from the sky into the F, then rest behind the words and part around the cursor */
+(function(){
+ var c=document.getElementById('mark'),x=c.getContext('2d'),dpr=Math.min(2,window.devicePixelRatio||1),W,H,pts=[],t0=performance.now(),
+  still=matchMedia('(prefers-reduced-motion: reduce)').matches,F=new Path2D('M125 205 L605 30 L578 158 L550 182 L250 293 L236 396 L540 284 L322 494 L205 546 L165 632 L42 712 Z');
+ function targets(){
+  var o=document.createElement('canvas'),w=300,h=356;o.width=w;o.height=h;var g=o.getContext('2d');
+  g.setTransform(w/590,0,0,h/700,-30*w/590,-20*h/700);g.fill(F);
+  var d=g.getImageData(0,0,w,h).data,out=[],step=W<700?9:7;
+  for(var yy=0;yy<h;yy+=step)for(var xx=0;xx<w;xx+=step){var jx=xx+(Math.random()-.5)*step*.9,jy=yy+(Math.random()-.5)*step*.9,ix=Math.max(0,Math.min(w-1,jx|0)),iy=Math.max(0,Math.min(h-1,jy|0));if(d[(iy*w+ix)*4+3]>128)out.push([jx/w,jy/h])}
+  return out}
+ function size(){W=c.clientWidth;H=c.clientHeight;c.width=W*dpr;c.height=H*dpr;x.setTransform(dpr,0,0,dpr,0,0);
+  var mh=Math.min(H*.62,W<700?W*1.05:620),mw=mh*300/356,ox=W/2-mw/2+mw*.03,oy=H*.47-mh/2,T=targets(),old=pts;pts=[];
+  T.forEach(function(p,i){var q=old[i];pts.push({tx:ox+p[0]*mw,ty:oy+p[1]*mh,sx:q?q.x:Math.random()*W,sy:q?q.y:Math.random()*H*.9,x:0,y:0,ox:0,oy:0,r:Math.random()*.9+.5,ph:Math.random()*6.28,dl:Math.random()*.5})})}
+ size();var rz;addEventListener('resize',function(){clearTimeout(rz);rz=setTimeout(function(){t0=performance.now()-4000;size()},150)});
+ function ease(v){return 1-Math.pow(1-v,3)}
+ function loop(now){var t=(now-t0)/1000;x.clearRect(0,0,W,H);
+  /* form 0.2–2.6s, glow until 3.2s, then settle to a quiet watermark */
+  var glow=still?.2:(t<2.9?.95:Math.max(.2,.95-(t-2.9)*.5)),P=window.__fx;
+  for(var i=0;i<pts.length;i++){var p=pts[i],k=still?1:ease(Math.max(0,Math.min(1,(t-.2-p.dl)/2.1)));
+   var bx=p.sx+(p.tx-p.sx)*k,by=p.sy+(p.ty-p.sy)*k;
+   /* part around the cursor, spring back */
+   var px=0,py=0;if(P&&P.k>0){var dx=bx-P.x,dy=by-P.y,d=Math.sqrt(dx*dx+dy*dy);if(d<140&&d>.1){var f=(1-d/140);f=f*f*26*P.k;px=dx/d*f;py=dy/d*f}}
+   p.ox+=(px-p.ox)*.12;p.oy+=(py-p.oy)*.12;
+   var tw=still?1:.75+.25*Math.sin(now/900+p.ph),ax=bx+p.ox+(still?0:Math.sin(now/2600+p.ph)*1.2),ay=by+p.oy+(still?0:Math.cos(now/3000+p.ph)*1.2);
+   var a=glow*tw;
+   x.globalAlpha=a*.35;x.fillStyle='#BECBDD';x.beginPath();x.arc(ax,ay,p.r*3.2,0,6.283);x.fill();
+   x.globalAlpha=a;x.fillStyle='#F4F1EA';x.beginPath();x.arc(ax,ay,p.r,0,6.283);x.fill()}
+  x.globalAlpha=1;if(!still)requestAnimationFrame(loop)}
+ requestAnimationFrame(loop);
 })();
 </script>
 </body>
