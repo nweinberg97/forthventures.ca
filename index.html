@@ -196,7 +196,7 @@ h1{animation-delay:2.6s}
  <footer class="bottom"><div class="wrap"><span>Made in Vancouver</span><span>© 2026 Forth Ventures™</span></div></footer>
 </div>
 <script>
-document.getElementById('f').addEventListener('submit',function(e){e.preventDefault();document.getElementById('m').textContent="Preview only: this form isn't connected yet.";});
+(function(){var f=document.getElementById('f'),m=document.getElementById('m'),x=document.getElementById('e'),b=f.querySelector('button');f.addEventListener('submit',function(e){e.preventDefault();if(!x.checkValidity()||!x.value){m.textContent='Please enter a valid email.';return}var P={from_name:'Forth waitlist',reply_to:x.value,message:'New Forth waitlist signup: '+x.value};b.disabled=true;m.textContent='Adding you…';fetch('https://api.emailjs.com/api/v1.0/email/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({service_id:'service_wrnbapd',template_id:'template_vc7abxh',user_id:'qZCMk0yO7Rwu_EXe2',template_params:P})}).then(function(r){if(!r.ok)throw 0;m.textContent="You're on the list. We'll be in touch at launch.";f.reset()}).catch(function(){m.textContent='Something went wrong. Please try again.'}).finally(function(){b.disabled=false})})})();
 /* Vancouver footage: add files with these names to video/ and they play in turn, crossfading. */
 (function(){
  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
