@@ -84,32 +84,21 @@ button{font-size:clamp(11.5px,.95vw,12.5px);letter-spacing:.14em}
 @media(max-width:520px){h1{font-size:30px;letter-spacing:.11em;padding-left:.11em}.motto{font-size:21px;margin-top:16px}.lede{font-size:16px;margin-top:12px;max-width:30ch}form{margin-top:28px}.roadmap{margin-top:32px;font-size:14px;max-width:28ch}}
 @media(prefers-reduced-motion:reduce){.roadmap{animation:none;opacity:1}}
 
-/* split layout: identity on the left, what's next + the one action on the right */
-.main{align-items:center;text-align:left}
-.main .wrap.split{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.9fr);gap:clamp(40px,6vw,104px);align-items:center;flex-direction:initial;padding-block:clamp(32px,6vh,80px)}
-.intro h1{font-size:clamp(46px,6.6vw,104px);line-height:.98;letter-spacing:.08em;padding-left:0;text-wrap:initial}
-.intro h1 span{display:block}
-.intro .motto{font-size:clamp(24px,2.3vw,34px);margin-top:clamp(20px,2.4vw,32px)}
-.intro .lede{text-align:left;max-width:34ch;margin-top:16px;font-size:clamp(16.5px,1.3vw,19px)}
-.card{position:relative;padding:clamp(28px,3vw,44px);border:1px solid rgba(237,234,227,.16);background:linear-gradient(180deg,rgba(22,24,30,.62),rgba(13,13,15,.55));backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 40px 80px -40px rgba(0,0,0,.8);opacity:0;animation:in 1.4s .9s ease forwards}
-.card::before{content:"";position:absolute;left:-1px;top:-1px;width:56px;height:2px;background:var(--mist)}
-.kicker{margin:0;font-size:12px;font-weight:700;letter-spacing:.26em;text-transform:uppercase;color:var(--mist)}
-.road{margin:16px 0 0;font-family:"EB Garamond",Georgia,serif;font-style:italic;font-size:clamp(21px,1.75vw,26px);line-height:1.35;color:var(--cream);text-wrap:balance}
-.card form{margin-top:28px;max-width:none;flex-direction:column;border:0;background:none;backdrop-filter:none;gap:10px;opacity:1;animation:none}
-.card input{border:1px solid rgba(237,234,227,.35);background:rgba(13,13,15,.5);min-height:52px;padding:0 16px}
-.card input:focus{border-color:var(--mist);outline:none}
-.card button{min-height:52px;width:100%;font-size:12.5px;letter-spacing:.16em}
-.card .msg{margin:10px 0 0;min-height:0}
-.roadmap{display:none}
-@media(max-width:900px){
- .main .wrap.split{grid-template-columns:minmax(0,1fr);gap:36px;padding-block:28px 40px}
- .intro h1{font-size:clamp(40px,11vw,64px);letter-spacing:.07em}
- .intro .motto{font-size:22px;margin-top:16px}
- .intro .lede{font-size:16px;max-width:32ch}
- .card{padding:24px}
- .road{font-size:20px}
-}
-@media(prefers-reduced-motion:reduce){.card{animation:none;opacity:1}}
+/* calm pass: quiet confidence. One axis, generous space, fewer sizes, slower motion. */
+.main .wrap{padding-block:clamp(40px,10vh,120px) clamp(48px,10vh,120px)}
+h1{font-size:clamp(30px,4.6vw,64px);letter-spacing:.24em;padding-left:.24em;font-weight:700;line-height:1.1}
+.motto{font-size:clamp(20px,1.8vw,26px);margin-top:28px;color:var(--mist);letter-spacing:.005em}
+.lede{font-size:clamp(15.5px,1.15vw,17px);line-height:1.75;color:#B9B6AF;max-width:38ch;margin-top:14px}
+form{margin-top:48px;max-width:440px;border:1px solid rgba(237,234,227,.28);background:rgba(13,13,15,.35)}
+form:focus-within{border-color:rgba(190,203,221,.6)}
+input,button{min-height:50px}
+input{font-size:15px;padding:0 18px}
+input:focus{outline:none}
+button{font-size:11.5px;letter-spacing:.18em;padding:0 22px}
+.roadmap{margin-top:clamp(56px,9vh,96px);max-width:40ch;font-size:13.5px;letter-spacing:.02em;color:#8E8B85;gap:0}
+.roadmap .rule{display:none}
+.msg{min-height:18px;font-size:13px}
+@media(max-width:520px){h1{font-size:26px;letter-spacing:.18em;padding-left:.18em}.motto{font-size:20px;margin-top:20px}.lede{font-size:15px;max-width:30ch}form{margin-top:36px}.roadmap{margin-top:56px;font-size:13px;max-width:30ch}}
 </style>
 </head>
 <body>
@@ -120,22 +109,17 @@ button{font-size:clamp(11.5px,.95vw,12.5px);letter-spacing:.14em}
  <header class="top"><div class="wrap">
   <span class="logo"><svg viewBox="30 20 590 700" aria-hidden="true"><path d="M125 205 L605 30 L578 158 L550 182 L250 293 L236 396 L540 284 L322 494 L205 546 L165 632 L42 712 Z" fill="#EDEAE3"/></svg>Forth</span>
  </div></header>
- <main class="main"><div class="wrap split">
-  <section class="intro">
-   <h1><span>Forth</span> <span>Ventures</span></h1>
-   <p class="motto">Building a more human future.</p>
-   <p class="lede">A venture studio building products that help people live better, with the creators they trust.</p>
-  </section>
-  <aside class="card" aria-label="Launch updates">
-   <p class="kicker">Coming soon</p>
-   <p class="road">Starting with everyday products, building toward infrastructure for human potential.</p>
-   <form id="f" novalidate>
-    <label for="e" class="vh">Email</label>
-    <input id="e" type="email" placeholder="Your email" autocomplete="email" required>
-    <button type="submit">Notify me at launch</button>
-   </form>
-   <p class="msg" id="m" role="status"></p>
-  </aside>
+ <main class="main"><div class="wrap">
+  <h1>Forth Ventures</h1>
+  <p class="motto">Building a more human future.</p>
+  <p class="lede">A venture studio building products that help people live better, with the creators they trust.</p>
+  <form id="f" novalidate>
+   <label for="e" class="vh">Email</label>
+   <input id="e" type="email" placeholder="Your email" autocomplete="email" required>
+   <button type="submit">Notify me at launch</button>
+  </form>
+  <p class="msg" id="m" role="status"></p>
+  <p class="roadmap"><span class="rule" aria-hidden="true"></span>Starting with everyday products, building toward infrastructure for human potential.</p>
  </div></main>
  <footer class="bottom"><div class="wrap"><span>Made in Vancouver</span><span>© 2026 Forth Ventures™</span></div></footer>
 </div>
@@ -168,7 +152,7 @@ document.getElementById('f').addEventListener('submit',function(e){e.preventDefa
    if(m.life>=m.max)shots.splice(j,1)}
   x.globalAlpha=1;if(!still)requestAnimationFrame(loop)}
  requestAnimationFrame(loop);
- if(!still){setTimeout(shoot,900);setTimeout(shoot,2600);(function next(){setTimeout(function(){if(!document.hidden){shoot();if(Math.random()<.3)setTimeout(shoot,500)}next()},1400+Math.random()*2200)})()}
+ if(!still){setTimeout(shoot,2500);(function next(){setTimeout(function(){if(!document.hidden)shoot();next()},6000+Math.random()*6000)})()}
 })();
 </script>
 </body>
