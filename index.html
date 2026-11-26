@@ -150,6 +150,22 @@ form{margin-top:48px;max-width:440px;width:100%}
 h1{animation-delay:2.6s}
 .motto{animation-delay:3.2s}.lede{animation-delay:3.4s}form{animation-delay:3.6s}.roadmap{animation-delay:3.9s}
 .roadmap .rule{animation-delay:4.2s}
+
+/* composition: words in a left column, the mark as the hero on the right */
+@media(min-width:900px){
+ .main{text-align:left;align-items:center}
+ .main .wrap{max-width:1200px;align-items:flex-start;padding-block:clamp(32px,6vh,72px)}
+ .main .wrap>*{max-width:520px}
+ .kick{padding-left:0;margin-bottom:30px}
+ h1{font-size:clamp(44px,4.6vw,68px);letter-spacing:.16em;padding-left:0;line-height:1.04}
+ @keyframes track{from{opacity:0;letter-spacing:.4em;filter:blur(8px)}to{opacity:1;letter-spacing:.16em;filter:blur(0)}}
+ .motto{margin-top:30px}
+ .lede{margin-top:14px;max-width:420px}
+ form{margin-top:44px;max-width:460px}
+ .roadmap{align-items:flex-start;text-align:left;margin-top:56px;max-width:380px}
+ .horizon{left:10%;right:-30%}
+ .spot{background:radial-gradient(420px 320px at var(--mx,70%) var(--my,50%),rgba(190,203,221,.07),transparent 70%)}
+}
 </style>
 </head>
 <body>
@@ -233,7 +249,7 @@ document.getElementById('f').addEventListener('submit',function(e){e.preventDefa
 
 /* Forth mark in light: points gather from the sky into the F, then rest behind the words and part around the cursor */
 (function(){
- var c=document.getElementById('mark'),x=c.getContext('2d'),dpr=Math.min(2,window.devicePixelRatio||1),W,H,pts=[],t0=performance.now(),
+ var REST=.2,c=document.getElementById('mark'),x=c.getContext('2d'),dpr=Math.min(2,window.devicePixelRatio||1),W,H,pts=[],t0=performance.now(),
   still=matchMedia('(prefers-reduced-motion: reduce)').matches,F=new Path2D('M125 205 L605 30 L578 158 L550 182 L250 293 L236 396 L540 284 L322 494 L205 546 L165 632 L42 712 Z');
  function targets(){
   var o=document.createElement('canvas'),w=300,h=356;o.width=w;o.height=h;var g=o.getContext('2d');
@@ -242,13 +258,13 @@ document.getElementById('f').addEventListener('submit',function(e){e.preventDefa
   for(var yy=0;yy<h;yy+=step)for(var xx=0;xx<w;xx+=step){var jx=xx+(Math.random()-.5)*step*.9,jy=yy+(Math.random()-.5)*step*.9,ix=Math.max(0,Math.min(w-1,jx|0)),iy=Math.max(0,Math.min(h-1,jy|0));if(d[(iy*w+ix)*4+3]>128)out.push([jx/w,jy/h])}
   return out}
  function size(){W=c.clientWidth;H=c.clientHeight;c.width=W*dpr;c.height=H*dpr;x.setTransform(dpr,0,0,dpr,0,0);
-  var mh=Math.min(H*.62,W<700?W*1.05:620),mw=mh*300/356,ox=W/2-mw/2+mw*.03,oy=H*.47-mh/2,T=targets(),old=pts;pts=[];
+  var wide=W>=900,mh=wide?Math.min(H*.7,640):Math.min(H*.62,W*1.05),mw=mh*300/356,ox=wide?Math.max(W*.56,W/2+60):W/2-mw/2+mw*.03,oy=(wide?H*.5:H*.47)-mh/2;REST=wide?.55:.2,T=targets(),old=pts;pts=[];
   T.forEach(function(p,i){var q=old[i];pts.push({tx:ox+p[0]*mw,ty:oy+p[1]*mh,sx:q?q.x:Math.random()*W,sy:q?q.y:Math.random()*H*.9,x:0,y:0,ox:0,oy:0,r:Math.random()*.9+.5,ph:Math.random()*6.28,dl:Math.random()*.5})})}
  size();var rz;addEventListener('resize',function(){clearTimeout(rz);rz=setTimeout(function(){t0=performance.now()-4000;size()},150)});
  function ease(v){return 1-Math.pow(1-v,3)}
  function loop(now){var t=(now-t0)/1000;x.clearRect(0,0,W,H);
   /* form 0.2–2.6s, glow until 3.2s, then settle to a quiet watermark */
-  var glow=still?.2:(t<2.9?.95:Math.max(.2,.95-(t-2.9)*.5)),P=window.__fx;
+  var glow=still?REST:(t<2.9?.95:Math.max(REST,.95-(t-2.9)*.5)),P=window.__fx;
   for(var i=0;i<pts.length;i++){var p=pts[i],k=still?1:ease(Math.max(0,Math.min(1,(t-.2-p.dl)/2.1)));
    var bx=p.sx+(p.tx-p.sx)*k,by=p.sy+(p.ty-p.sy)*k;
    /* part around the cursor, spring back */
