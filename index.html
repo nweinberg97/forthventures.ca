@@ -63,6 +63,26 @@ button:hover{background:#fff}
 @media(min-width:1100px){.lede,.mission .sub{max-width:none;white-space:nowrap}}
 @media(max-width:520px){.lede{font-size:17px;max-width:none;margin-top:16px}.mission{margin-top:44px}.mission .sub{font-size:14px;max-width:none;margin-top:10px}.core{font-size:20px;text-wrap:balance}h1{letter-spacing:.12em;padding-left:.12em}form{margin-top:26px;max-width:340px}.main .wrap{padding-block:36px 32px}.bottom .wrap{flex-direction:column;align-items:center;gap:4px;font-size:11.5px;padding-bottom:22px}.top .wrap{min-height:68px}}
 @media(max-width:360px){input{font-size:15px}button{letter-spacing:.08em;padding:0 10px}}
+
+/* readability pass: one headline, one motto, one sentence, one action, one quiet note */
+:root{--grey:#A9A6A0;--soft:#DAD7D0}
+.shade{background:radial-gradient(55% 45% at 50% 42%,rgba(13,13,15,.55),transparent 75%),radial-gradient(120% 70% at 50% 0%,rgba(28,40,66,.5),transparent 70%),radial-gradient(90% 50% at 50% 110%,rgba(45,67,101,.35),transparent 70%),linear-gradient(180deg,rgba(8,10,18,.35) 0%,rgba(13,13,15,.2) 50%,rgba(13,13,15,.75) 100%)}
+.main{align-items:center}
+.main .wrap{padding-block:clamp(32px,8vh,96px) clamp(40px,8vh,96px)}
+h1{font-size:clamp(34px,5.6vw,80px);letter-spacing:.14em;padding-left:.14em}
+.motto{font-size:clamp(22px,2.1vw,30px);line-height:1.25;color:var(--mist);margin:22px 0 0;animation-delay:.6s}
+.lede{font-family:"Montserrat",Arial,sans-serif;font-style:normal;font-weight:400;font-size:clamp(16.5px,1.35vw,19px);line-height:1.65;color:var(--soft);max-width:36ch;margin:18px 0 0;text-wrap:balance;white-space:normal;animation-delay:.9s}
+form{margin-top:40px;max-width:480px;border-color:rgba(237,234,227,.5);animation-delay:1.2s}
+input{font-size:16px;color:var(--cream)}
+input::placeholder{color:#8E8B85}
+button{font-size:clamp(11.5px,.95vw,12.5px);letter-spacing:.14em}
+.msg{min-height:20px}
+.roadmap{display:flex;flex-direction:column;align-items:center;gap:18px;margin:clamp(28px,5vh,56px) 0 0;max-width:34ch;text-wrap:balance;font-size:clamp(14px,1.1vw,15.5px);line-height:1.6;letter-spacing:.01em;color:var(--grey);opacity:0;animation:in 1.4s 1.5s ease forwards}
+.roadmap .rule{display:block;width:40px;height:1px;background:rgba(190,203,221,.45)}
+.bottom .wrap{color:#8E8B85}
+@media(min-width:1100px){.lede{max-width:40ch;white-space:normal}}
+@media(max-width:520px){h1{font-size:30px;letter-spacing:.11em;padding-left:.11em}.motto{font-size:21px;margin-top:16px}.lede{font-size:16px;margin-top:12px;max-width:30ch}form{margin-top:28px}.roadmap{margin-top:32px;font-size:14px;max-width:28ch}}
+@media(prefers-reduced-motion:reduce){.roadmap{animation:none;opacity:1}}
 </style>
 </head>
 <body>
@@ -75,6 +95,7 @@ button:hover{background:#fff}
  </div></header>
  <main class="main"><div class="wrap">
   <h1>Forth Ventures</h1>
+  <p class="motto">Building a more human future.</p>
   <p class="lede">A venture studio building products that help people live better, with the creators they trust.</p>
   <form id="f" novalidate>
    <label for="e" class="vh">Email</label>
@@ -82,10 +103,7 @@ button:hover{background:#fff}
    <button type="submit">Notify me at launch</button>
   </form>
   <p class="msg" id="m" role="status"></p>
-  <div class="mission">
-   <p class="core">Building a more human future.</p>
-   <p class="sub">Starting with everyday products, building toward infrastructure for human potential.</p>
-  </div>
+  <p class="roadmap"><span class="rule" aria-hidden="true"></span>Starting with everyday products, building toward infrastructure for human potential.</p>
  </div></main>
  <footer class="bottom"><div class="wrap"><span>Made in Vancouver</span><span>© 2026 Forth Ventures™</span></div></footer>
 </div>
