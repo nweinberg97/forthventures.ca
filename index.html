@@ -128,6 +128,20 @@ button:hover::after{left:120%}
 .bottom .wrap{letter-spacing:.08em}
 @media(prefers-reduced-motion:reduce){.horizon{opacity:.85}.horizon,h1,.motto,.lede,form,.roadmap,.roadmap .rule{animation:none;opacity:1;filter:none}}
 @media(max-width:520px){form{margin-top:36px}.roadmap{margin-top:44px}.spot{display:none}}
+
+/* type + rhythm: one scale, one column, 8px rhythm */
+.main .wrap{max-width:760px}
+.kick{margin:0 0 28px;font-size:11.5px;font-weight:600;letter-spacing:.34em;text-transform:uppercase;color:var(--mist);padding-left:.34em;opacity:0;animation:rise 1.4s .1s cubic-bezier(.2,.7,.1,1) both}
+.kick span{opacity:.5;margin:0 .5em}
+h1{font-size:clamp(30px,4.2vw,58px);font-weight:700;letter-spacing:.2em;padding-left:.2em;line-height:1.08}
+@keyframes track{from{opacity:0;letter-spacing:.5em;filter:blur(8px)}to{opacity:1;letter-spacing:.2em;filter:blur(0)}}
+.motto{font-size:clamp(22px,2vw,28px);line-height:1.3;margin-top:24px}
+.lede{font-size:clamp(15.5px,1.12vw,17px);line-height:1.75;max-width:440px;margin-top:16px;color:#BDBAB3}
+form{margin-top:48px;max-width:440px;width:100%}
+.msg{margin-top:12px}
+.roadmap{margin-top:64px;max-width:440px;font-size:13px;line-height:1.7;letter-spacing:.03em}
+@media(max-width:520px){.kick{font-size:10.5px;letter-spacing:.28em;margin-bottom:22px}h1{font-size:27px;letter-spacing:.16em;padding-left:.16em}.motto{font-size:21px;margin-top:18px}.lede{margin-top:12px;max-width:31ch}form{margin-top:36px}.roadmap{margin-top:52px;max-width:30ch}}
+@media(prefers-reduced-motion:reduce){.kick{animation:none;opacity:1}}
 </style>
 </head>
 <body>
@@ -142,6 +156,7 @@ button:hover::after{left:120%}
   <span class="logo"><svg viewBox="30 20 590 700" aria-hidden="true"><path d="M125 205 L605 30 L578 158 L550 182 L250 293 L236 396 L540 284 L322 494 L205 546 L165 632 L42 712 Z" fill="#EDEAE3"/></svg>Forth</span>
  </div></header>
  <main class="main"><div class="wrap">
+  <p class="kick">Coming soon <span>·</span> Vancouver</p>
   <h1>Forth Ventures</h1>
   <p class="motto">Building a more human future.</p>
   <p class="lede">A venture studio building products that help people live better, with the creators they trust.</p>
@@ -177,9 +192,11 @@ document.getElementById('f').addEventListener('submit',function(e){e.preventDefa
   shots.push({x:sx,y:sy,vx:(fromLeft?1:-1)*Math.cos(Math.abs(ang))*sp,vy:Math.abs(Math.sin(ang))*sp,life:0,max:60+Math.random()*35,len:170+Math.random()*130})}
  function loop(t){x.clearRect(0,0,W,H);
   for(var i=0;i<stars.length;i++){var s=stars[i],tw=still?1:(.6+.4*Math.sin(t/1000*s.s+s.p));x.globalAlpha=s.a*tw;x.fillStyle='#EDEAE3';x.beginPath();x.arc(s.x,s.y,s.r,0,6.283);x.fill()}
-  var P=window.__fx;if(P&&P.k>0){var near=[];for(var q=0;q<stars.length;q++){var st=stars[q],dx=st.x-P.x,dy=st.y-P.y,d=dx*dx+dy*dy;if(d<170*170)near.push(st)}
-   x.lineWidth=.6;for(var u=0;u<near.length;u++)for(var v=u+1;v<near.length;v++){var A=near[u],Bq=near[v],ex=A.x-Bq.x,ey=A.y-Bq.y,dd=Math.sqrt(ex*ex+ey*ey);if(dd<95){
-    var pd=Math.hypot((A.x+Bq.x)/2-P.x,(A.y+Bq.y)/2-P.y);x.globalAlpha=Math.max(0,(1-dd/95)*(1-pd/170))*.75*P.k;x.strokeStyle='#BECBDD';x.beginPath();x.moveTo(A.x,A.y);x.lineTo(Bq.x,Bq.y);x.stroke()}}
+  var P=window.__fx;if(P&&P.k>0){for(var q=0;q<stars.length;q++){var st=stars[q],dx=st.x-P.x,dy=st.y-P.y,d=Math.sqrt(dx*dx+dy*dy);if(d<200){
+    var w=(1-d/200);w=w*w*P.k;var rr=st.r*(1+1.6*w);
+    var g2=x.createRadialGradient(st.x,st.y,0,st.x,st.y,rr*7);g2.addColorStop(0,'rgba(237,234,227,'+(.35*w)+')');g2.addColorStop(1,'rgba(190,203,221,0)');
+    x.globalAlpha=1;x.fillStyle=g2;x.beginPath();x.arc(st.x,st.y,rr*7,0,6.283);x.fill();
+    x.globalAlpha=Math.min(1,st.a+.6*w);x.fillStyle='#F4F1EA';x.beginPath();x.arc(st.x,st.y,rr,0,6.283);x.fill()}}
    x.globalAlpha=1}
   for(var j=shots.length-1;j>=0;j--){var m=shots[j];m.life++;m.x+=m.vx;m.y+=m.vy;var f=m.life/m.max,al=f<.15?f/.15:1-(f-.15)/.85,sp=Math.hypot(m.vx,m.vy),tx=m.x-m.vx/sp*m.len,ty=m.y-m.vy/sp*m.len;
    var g=x.createLinearGradient(m.x,m.y,tx,ty);g.addColorStop(0,'rgba(237,234,227,'+(.95*al)+')');g.addColorStop(.25,'rgba(190,203,221,'+(.45*al)+')');g.addColorStop(1,'rgba(190,203,221,0)');
@@ -191,7 +208,7 @@ document.getElementById('f').addEventListener('submit',function(e){e.preventDefa
  if(!still){setTimeout(shoot,2500);(function next(){setTimeout(function(){if(!document.hidden)shoot();next()},6000+Math.random()*6000)})()}
 })();
 
-/* constellations: stars near the cursor gently connect, like people finding each other */
+/* potential: stars near the cursor quietly brighten and glow, as if waking up */
 (function(){if(matchMedia('(hover: none)').matches)return;var P=window.__fx={x:-999,y:-999,on:false,k:0},t=0;
  addEventListener('pointermove',function(e){P.x=e.clientX;P.y=e.clientY;P.on=true;clearTimeout(t);t=setTimeout(function(){P.on=false},2200)});
  (function ease(){P.k+=((P.on?1:0)-P.k)*.06;if(P.k<.01&&!P.on)P.k=0;requestAnimationFrame(ease)})();
