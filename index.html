@@ -99,6 +99,35 @@ button{font-size:11.5px;letter-spacing:.18em;padding:0 22px}
 .roadmap .rule{display:none}
 .msg{min-height:18px;font-size:13px}
 @media(max-width:520px){h1{font-size:26px;letter-spacing:.18em;padding-left:.18em}.motto{font-size:20px;margin-top:20px}.lede{font-size:15px;max-width:30ch}form{margin-top:36px}.roadmap{margin-top:56px;font-size:13px;max-width:30ch}}
+
+/* premium pass: slow light, depth, texture, and a composed reveal */
+.horizon{position:absolute;left:-20%;right:-20%;bottom:-38vh;height:70vh;z-index:1;pointer-events:none;
+ background:radial-gradient(50% 50% at 50% 50%,rgba(190,203,221,.16),rgba(120,145,190,.07) 45%,transparent 70%);
+ filter:blur(10px);animation:dawn 6s .3s cubic-bezier(.2,.6,.2,1) both,tide 14s 6.3s ease-in-out infinite alternate}
+@keyframes dawn{from{opacity:0;transform:translate3d(0,22vh,0) scaleX(.8)}to{opacity:.85;transform:none}}
+.horizon::after{content:"";position:absolute;inset:20% 25%;background:radial-gradient(50% 50% at 50% 55%,rgba(232,201,160,.07),transparent 70%)}
+@keyframes tide{from{transform:translate3d(-3%,0,0) scaleX(1);opacity:.75}to{transform:translate3d(3%,-3%,0) scaleX(1.08);opacity:1}}
+.spot{position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(420px 320px at var(--mx,50%) var(--my,45%),rgba(190,203,221,.07),transparent 70%);transition:background .2s}
+.grain{position:absolute;inset:0;z-index:3;pointer-events:none;opacity:.07;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.sky{transition:transform 1.2s cubic-bezier(.2,.8,.2,1)}
+h1{animation:track 2.2s .2s cubic-bezier(.2,.7,.1,1) both}
+@keyframes track{from{opacity:0;letter-spacing:.6em;filter:blur(8px)}to{opacity:1;letter-spacing:.24em;filter:blur(0)}}
+.motto,.lede,form,.roadmap{animation-name:rise;animation-duration:1.6s;animation-timing-function:cubic-bezier(.2,.7,.1,1);animation-fill-mode:both}
+.motto{animation-delay:1s}.lede{animation-delay:1.25s}form{animation-delay:1.5s}.roadmap{animation-delay:1.9s}
+@keyframes rise{from{opacity:0;transform:translateY(12px);filter:blur(6px)}to{opacity:1;transform:none;filter:blur(0)}}
+.motto{margin-top:26px}
+.lede{margin-top:12px}
+form{margin-top:52px;transition:border-color .4s,box-shadow .4s}
+form:focus-within{border-color:rgba(190,203,221,.65);box-shadow:0 0 0 6px rgba(190,203,221,.06),0 20px 60px -20px rgba(120,145,190,.35)}
+button{position:relative;overflow:hidden;transition:background .3s}
+button::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:40%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.65),transparent);transform:skewX(-20deg);transition:left .7s ease}
+button:hover::after{left:120%}
+.roadmap{margin-top:56px;gap:16px}
+.roadmap .rule{display:block;width:28px;height:1px;background:rgba(190,203,221,.4);animation:grow 1.2s 2.3s ease both}
+@keyframes grow{from{transform:scaleX(0)}to{transform:none}}
+.bottom .wrap{letter-spacing:.08em}
+@media(prefers-reduced-motion:reduce){.horizon{opacity:.85}.horizon,h1,.motto,.lede,form,.roadmap,.roadmap .rule{animation:none;opacity:1;filter:none}}
+@media(max-width:520px){form{margin-top:36px}.roadmap{margin-top:44px}.spot{display:none}}
 </style>
 </head>
 <body>
@@ -106,6 +135,9 @@ button{font-size:11.5px;letter-spacing:.18em;padding:0 22px}
  <div class="footage" id="footage" aria-hidden="true"><div class="fallback"></div></div>
  <canvas class="sky" id="sky" aria-hidden="true"></canvas>
  <div class="shade" aria-hidden="true"></div>
+ <div class="horizon" aria-hidden="true"></div>
+ <div class="spot" id="spot" aria-hidden="true"></div>
+ <div class="grain" aria-hidden="true"></div>
  <header class="top"><div class="wrap">
   <span class="logo"><svg viewBox="30 20 590 700" aria-hidden="true"><path d="M125 205 L605 30 L578 158 L550 182 L250 293 L236 396 L540 284 L322 494 L205 546 L165 632 L42 712 Z" fill="#EDEAE3"/></svg>Forth</span>
  </div></header>
@@ -145,6 +177,10 @@ document.getElementById('f').addEventListener('submit',function(e){e.preventDefa
   shots.push({x:sx,y:sy,vx:(fromLeft?1:-1)*Math.cos(Math.abs(ang))*sp,vy:Math.abs(Math.sin(ang))*sp,life:0,max:60+Math.random()*35,len:170+Math.random()*130})}
  function loop(t){x.clearRect(0,0,W,H);
   for(var i=0;i<stars.length;i++){var s=stars[i],tw=still?1:(.6+.4*Math.sin(t/1000*s.s+s.p));x.globalAlpha=s.a*tw;x.fillStyle='#EDEAE3';x.beginPath();x.arc(s.x,s.y,s.r,0,6.283);x.fill()}
+  var P=window.__fx;if(P&&P.k>0){var near=[];for(var q=0;q<stars.length;q++){var st=stars[q],dx=st.x-P.x,dy=st.y-P.y,d=dx*dx+dy*dy;if(d<170*170)near.push(st)}
+   x.lineWidth=.6;for(var u=0;u<near.length;u++)for(var v=u+1;v<near.length;v++){var A=near[u],Bq=near[v],ex=A.x-Bq.x,ey=A.y-Bq.y,dd=Math.sqrt(ex*ex+ey*ey);if(dd<95){
+    var pd=Math.hypot((A.x+Bq.x)/2-P.x,(A.y+Bq.y)/2-P.y);x.globalAlpha=Math.max(0,(1-dd/95)*(1-pd/170))*.75*P.k;x.strokeStyle='#BECBDD';x.beginPath();x.moveTo(A.x,A.y);x.lineTo(Bq.x,Bq.y);x.stroke()}}
+   x.globalAlpha=1}
   for(var j=shots.length-1;j>=0;j--){var m=shots[j];m.life++;m.x+=m.vx;m.y+=m.vy;var f=m.life/m.max,al=f<.15?f/.15:1-(f-.15)/.85,sp=Math.hypot(m.vx,m.vy),tx=m.x-m.vx/sp*m.len,ty=m.y-m.vy/sp*m.len;
    var g=x.createLinearGradient(m.x,m.y,tx,ty);g.addColorStop(0,'rgba(237,234,227,'+(.95*al)+')');g.addColorStop(.25,'rgba(190,203,221,'+(.45*al)+')');g.addColorStop(1,'rgba(190,203,221,0)');
    x.globalAlpha=1;x.strokeStyle=g;x.lineWidth=1.9;x.lineCap='round';x.beginPath();x.moveTo(m.x,m.y);x.lineTo(tx,ty);x.stroke();
@@ -153,6 +189,20 @@ document.getElementById('f').addEventListener('submit',function(e){e.preventDefa
   x.globalAlpha=1;if(!still)requestAnimationFrame(loop)}
  requestAnimationFrame(loop);
  if(!still){setTimeout(shoot,2500);(function next(){setTimeout(function(){if(!document.hidden)shoot();next()},6000+Math.random()*6000)})()}
+})();
+
+/* constellations: stars near the cursor gently connect, like people finding each other */
+(function(){if(matchMedia('(hover: none)').matches)return;var P=window.__fx={x:-999,y:-999,on:false,k:0},t=0;
+ addEventListener('pointermove',function(e){P.x=e.clientX;P.y=e.clientY;P.on=true;clearTimeout(t);t=setTimeout(function(){P.on=false},2200)});
+ (function ease(){P.k+=((P.on?1:0)-P.k)*.06;if(P.k<.01&&!P.on)P.k=0;requestAnimationFrame(ease)})();
+ document.addEventListener('pointerleave',function(){P.on=false});
+})();
+/* depth: the sky drifts a few pixels against the cursor, and a soft light follows it */
+(function(){if(matchMedia('(prefers-reduced-motion: reduce)').matches||matchMedia('(hover: none)').matches)return;
+ var sky=document.getElementById('sky'),spot=document.getElementById('spot'),raf=0,mx=.5,my=.45;
+ addEventListener('pointermove',function(e){mx=e.clientX/innerWidth;my=e.clientY/innerHeight;if(!raf)raf=requestAnimationFrame(function(){raf=0;
+  sky.style.transform='translate3d('+((mx-.5)*-14).toFixed(1)+'px,'+((my-.5)*-10).toFixed(1)+'px,0)';
+  spot.style.setProperty('--mx',(mx*100).toFixed(1)+'%');spot.style.setProperty('--my',(my*100).toFixed(1)+'%')})});
 })();
 </script>
 </body>
